@@ -96,20 +96,12 @@ export class Game {
     const c1 = CONTROLS.p1;
     if (input.wasPressed(c1.up) || input.wasPressed('ArrowUp')) { this.titleIndex = (this.titleIndex + 1) % 2; sfx.select(); }
     if (input.wasPressed(c1.down) || input.wasPressed('ArrowDown')) { this.titleIndex = (this.titleIndex + 1) % 2; sfx.select(); }
-    if (input.wasPressed(c1.left) || input.wasPressed('ArrowLeft')) { this.stocks = Math.max(1, this.stocks - 1); sfx.select(); }
-    if (input.wasPressed(c1.right) || input.wasPressed('ArrowRight')) { this.stocks = Math.min(9, this.stocks + 1); sfx.select(); }
     if (input.wasPressed('Digit1')) { this.titleIndex = 0; this.enterSelect(); }
     if (input.wasPressed('Digit2')) { this.titleIndex = 1; this.enterSelect(); }
     
     if (input.pointerPressed) {
       const px = input.pointer.x, py = input.pointer.y;
       const cx = GAME.WIDTH / 2;
-      
-      // Stock controls (y around 410)
-      if (py > 380 && py < 440) {
-        if (px < cx && px > cx - 100) { this.stocks = Math.max(1, this.stocks - 1); sfx.select(); }
-        else if (px > cx && px < cx + 100) { this.stocks = Math.min(9, this.stocks + 1); sfx.select(); }
-      }
       
       // Mode selection
       const optsY = [290, 340];
@@ -512,26 +504,6 @@ export class Game {
       ctx.fillStyle = sel ? '#ef4444' : '#64748b';
       ctx.fillText(prefix + opts[i], cx, textY);
     }
-
-    // Stocks
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(cx - 150, 410, 300, 36);
-    ctx.strokeStyle = '#222'; ctx.lineWidth = 2;
-    ctx.strokeRect(cx - 150, 410, 300, 36);
-    
-    ctx.fillStyle = '#475569';
-    ctx.font = 'bold 16px monospace';
-    ctx.fillText('STOCKS:', cx - 60, 434);
-    
-    ctx.fillStyle = '#2563eb';
-    ctx.font = 'bold 22px monospace';
-    ctx.fillText(`◀ ${this.stocks} ▶`, cx + 40, 436);
-
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-    ctx.fillRect(cx - 300, 480, 600, 24);
-    ctx.fillStyle = '#475569';
-    ctx.font = '12px monospace';
-    ctx.fillText('W/S or ↑/↓ select  ·  A/D or ←/→ stocks  ·  ENTER to start (or 1/2)', cx, 497);
   }
 
   // ---- SELECT ----
