@@ -494,6 +494,14 @@ export class Game {
     ctx.fillText('★ ONCHAIN BRAWLER · POWERED BY PUMP ★', cx, 235 + bob);
 
     const opts = ['1 PLAYER (vs CPU)', '2 PLAYERS'];
+    
+    // Background box for options to improve visibility
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+    ctx.fillRect(cx - 220, 280, 440, 130);
+    ctx.strokeStyle = '#222';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(cx - 220, 280, 440, 130);
+
     for (let i = 0; i < opts.length; i++) {
       const sel = i === this.titleIndex;
       ctx.font = `bold ${sel ? 32 : 26}px monospace`;
