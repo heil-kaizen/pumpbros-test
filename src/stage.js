@@ -1,6 +1,5 @@
 // ============================================================================
-//  Stage — bright, inviting daytime park: sky, sun, drifting clouds, a
-//  friendly city skyline, rolling hills with trees, and grassy platforms.
+//  Stage — video background
 // ============================================================================
 import { STAGE, GAME } from './config.js';
 
@@ -8,132 +7,23 @@ export class Stage {
   constructor() {
     this.t = 0;
 
-    // drifting clouds (parallax)
-    this.clouds = [];
-    for (let i = 0; i < 7; i++) {
-      this.clouds.push({
-        x: Math.random() * GAME.WIDTH,
-        y: 40 + Math.random() * 160,
-        s: 0.7 + Math.random() * 0.9,   // scale
-        spd: 0.12 + Math.random() * 0.22,
-      });
-    }
-
-    // city skyline (mid-ground), generated once
-    this.buildings = [];
-    let bx = -20;
-    while (bx < GAME.WIDTH + 40) {
-      const w = 34 + Math.floor(Math.random() * 40);
-      const h = 70 + Math.floor(Math.random() * 130);
-      this.buildings.push({ x: bx, w, h, tone: 0.8 + Math.random() * 0.2 });
-      bx += w + 6 + Math.floor(Math.random() * 14);
-    }
-
-    // background trees on the hills
-    this.trees = [];
-    for (let i = 0; i < 9; i++) {
-      this.trees.push({ x: 40 + i * 105 + Math.random() * 40, s: 0.8 + Math.random() * 0.6 });
-    }
+    this.video = document.createElement('video');
+    this.video.src = 'https://raw.githubusercontent.com/heil-kaizen/assets-for-smashfun/main/assets/chara%20assets%20sprite%20sheets/grok-video-ef5fe0a6-50e6-4770-8854-d5a3a83ce103%20(1).webm';
+    this.video.loop = true;
+    this.video.muted = true;
+    this.video.crossOrigin = 'anonymous';
+    this.video.play().catch(e => console.warn('Video autoplay failed:', e));
   }
 
   update() { this.t++; }
 
   drawBg(ctx) {
-    // --- sky ---
-    const g = ctx.createLinearGradient(0, 0, 0, GAME.HEIGHT);
-    g.addColorStop(0, '#5ea1ff'); // Bright sky blue
-    g.addColorStop(0.55, '#c5e2ff');
-    g.addColorStop(1, '#e6f3fa');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, GAME.WIDTH, GAME.HEIGHT);
-
-    // --- bright sun ---
-    const sunX = 120, sunY = 96;
-    const halo = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 130);
-    halo.addColorStop(0, 'rgba(255, 235, 100, 0.4)'); // soft yellow glow
-    halo.addColorStop(1, 'rgba(255, 235, 100, 0)');
-    ctx.fillStyle = halo;
-    ctx.fillRect(0, 0, 320, 280);
-    ctx.fillStyle = '#ffdf59';
-    ctx.beginPath(); ctx.arc(sunX, sunY, 36, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#fff5a8';
-    ctx.beginPath(); ctx.arc(sunX, sunY, 30, 0, Math.PI * 2); ctx.fill();
-
-    // --- friendly city skyline ---
-    const horizon = 350;
-    for (const b of this.buildings) {
-      const top = horizon - b.h;
-      // body
-      ctx.fillStyle = `rgba(${160 + Math.round(20 * b.tone)},${180 + Math.round(20 * b.tone)},${200 + Math.round(15 * b.tone)},0.9)`;
-      ctx.fillRect(b.x, top, b.w, b.h);
-      // top edge reflection
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(b.x, top, b.w, 3);
-      // windows
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-       for (let wy = top + 8; wy < horizon - 6; wy += 12) {
-        for (let wx = b.x + 5; wx < b.x + b.w - 5; wx += 11) {
-          if ((wx + wy + b.x) % 3 !== 0) ctx.fillRect(wx, wy, 5, 6);
-        }
-      }
+    if (this.video && this.video.readyState >= 2) {
+      ctx.drawImage(this.video, 0, 0, GAME.WIDTH, GAME.HEIGHT);
+    } else {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, GAME.WIDTH, GAME.HEIGHT);
     }
-
-    // --- fluffy clouds ---
-    for (const c of this.clouds) {
-      c.x += c.spd;
-      if (c.x > GAME.WIDTH + 70) c.x = -70;
-      this.drawCloud(ctx, c.x, c.y, c.s);
-    }
-
-    // --- rolling green hills ---
-    this.drawHills(ctx, horizon);
-
-    // background trees
-    for (const tr of this.trees) {
-      this.drawTree(ctx, tr.x, horizon + 6, tr.s);
-    }
-  }
-
-  drawCloud(ctx, x, y, s) {
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; // white puffy clouds
-    const puff = (dx, dy, r) => { ctx.beginPath(); ctx.arc(x + dx * s, y + dy * s, r * s, 0, Math.PI * 2); ctx.fill(); };
-    puff(0, 0, 18); puff(20, 4, 14); puff(-20, 4, 14); puff(8, -10, 13); puff(-10, -8, 12);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-    ctx.fillRect(x - 26 * s, y + 2 * s, 54 * s, 12 * s);
-  }
-
-  drawHills(ctx, horizon) {
-    // far hill
-    ctx.fillStyle = '#6abe57';
-    ctx.beginPath();
-    ctx.moveTo(0, horizon + 20);
-    for (let x = 0; x <= GAME.WIDTH; x += 20) {
-      ctx.lineTo(x, horizon - 6 + Math.sin(x * 0.012) * 22);
-    }
-    ctx.lineTo(GAME.WIDTH, GAME.HEIGHT); ctx.lineTo(0, GAME.HEIGHT); ctx.closePath(); ctx.fill();
-    
-    // near hill (darker, ground fill)
-    ctx.fillStyle = '#55a144';
-    ctx.beginPath();
-    ctx.moveTo(0, horizon + 36);
-    for (let x = 0; x <= GAME.WIDTH; x += 20) {
-      ctx.lineTo(x, horizon + 22 + Math.cos(x * 0.01 + 1) * 18);
-    }
-    ctx.lineTo(GAME.WIDTH, GAME.HEIGHT); ctx.lineTo(0, GAME.HEIGHT); ctx.closePath(); ctx.fill();
-  }
-
-  drawTree(ctx, x, y, s) {
-    const w = 10 * s, h = 26 * s;
-    // trunk
-    ctx.fillStyle = '#8b5a2b';
-    ctx.fillRect(x - w * 0.18, y - h * 0.5, w * 0.36, h * 0.6);
-    // canopy
-    ctx.fillStyle = '#32cd32';
-    ctx.beginPath(); ctx.arc(x, y - h * 0.7, 16 * s, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(x - 12 * s, y - h * 0.55, 11 * s, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(x + 12 * s, y - h * 0.55, 11 * s, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#228b22';
-    ctx.beginPath(); ctx.arc(x - 4 * s, y - h * 0.85, 9 * s, 0, Math.PI * 2); ctx.fill();
   }
 
   drawPlatforms(ctx) {
