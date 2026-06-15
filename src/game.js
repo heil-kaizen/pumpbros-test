@@ -493,29 +493,73 @@ export class Game {
     ctx.font = 'bold 20px monospace';
     ctx.fillText('★ ONCHAIN BRAWLER · POWERED BY PUMP ★', cx, 235 + bob);
 
-    const opts = ['1 PLAYER (vs CPU)', '2 PLAYERS'];
+    const opts = ['1 PLAYER', '2 PLAYERS'];
     
     // Background box for options to improve visibility
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
-    ctx.fillRect(cx - 220, 280, 440, 130);
-    ctx.strokeStyle = '#222';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(cx - 220, 280, 440, 130);
+    const optsY = [310, 370];
 
     for (let i = 0; i < opts.length; i++) {
       const sel = i === this.titleIndex;
-      ctx.font = `bold ${sel ? 32 : 26}px monospace`;
+      const barY = optsY[i];
+      const w = 360;
+      const h = 50;
+      const skew = 20;
+      const startX = cx - w/2;
+      const startY = barY - h/2;
+
+      ctx.beginPath();
+      ctx.moveTo(startX + skew, startY);
+      ctx.lineTo(startX + w + skew, startY);
+      ctx.lineTo(startX + w - skew, startY + h);
+      ctx.lineTo(startX - skew, startY + h);
+      ctx.closePath();
+
+      // Slanted box background
+      const grad = ctx.createLinearGradient(0, startY, 0, startY + h);
+      if (sel) {
+        grad.addColorStop(0, '#ff4b4b');
+        grad.addColorStop(0.5, '#dc2626');
+        grad.addColorStop(1, '#991b1b');
+        ctx.strokeStyle = '#fca5a5';
+        ctx.lineWidth = 4;
+      } else {
+        grad.addColorStop(0, '#6b7280');
+        grad.addColorStop(0.5, '#4b5563');
+        grad.addColorStop(1, '#374151');
+        ctx.strokeStyle = '#9ca3af';
+        ctx.lineWidth = 3;
+      }
+      
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.8)';
+      ctx.shadowBlur = 6;
+      ctx.shadowOffsetY = 4;
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.restore();
+
+      ctx.stroke();
+
+      // Inner highlight
+      ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(startX + skew + 2, startY + 4);
+      ctx.lineTo(startX + w + skew - 8, startY + 4);
+      ctx.stroke();
+
+      ctx.font = `bold ${sel ? 30 : 26}px monospace`;
       const prefix = sel ? '▶ ' : '';
       
-      const textY = 320 + i * 60;
+      const textY = barY + 10;
       
-      // thick black outline
+      // Thick black outline for text
       ctx.strokeStyle = '#000000'; 
       ctx.lineWidth = 6; 
       ctx.strokeText(prefix + opts[i], cx, textY); 
 
-      // text fill
-      ctx.fillStyle = sel ? '#ef4444' : '#ffffff';
+      // Text fill
+      ctx.fillStyle = sel ? '#ffffff' : '#f3f4f6';
       ctx.fillText(prefix + opts[i], cx, textY);
     }
   }
