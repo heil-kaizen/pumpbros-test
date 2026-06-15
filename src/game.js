@@ -271,14 +271,15 @@ export class Game {
       if (input.pointerPressed) {
         const px = input.pointer.x, py = input.pointer.y;
         const cx = GAME.WIDTH / 2;
-        if (py >= 420 && py <= 470) {
-          if (px >= cx - 220 && px <= cx - 20) {
-            sfx.start();
-            this.beginBattle();
-          } else if (px >= cx + 20 && px <= cx + 220) {
-            sfx.back();
-            this.state = 'TITLE';
-          }
+        // RESTART button
+        if (px >= cx - 120 && px <= cx + 120 && py >= 340 && py <= 390) {
+          sfx.start();
+          this.beginBattle();
+        }
+        // MENU button
+        if (px >= cx - 120 && px <= cx + 120 && py >= 410 && py <= 460) {
+          sfx.back();
+          this.state = 'TITLE';
         }
       }
 
@@ -286,7 +287,10 @@ export class Game {
         sfx.start();
         this.beginBattle(); // rematch same picks
       }
-      if (input.wasPressed('Escape')) { sfx.back(); this.state = 'TITLE'; }
+      if (input.wasPressed('Escape') || input.wasPressed(CONTROLS.p1.shield)) {
+        sfx.back();
+        this.state = 'TITLE';
+      }
     }
   }
 
@@ -392,15 +396,20 @@ export class Game {
       ctx.lineWidth = 3;
       ctx.strokeRect(x + 1.5, y + 1.5, boxW - 3, 55);
 
-      // abstract portrait swatch
       const portX = isP1 ? x + 10 : x + boxW - 42;
-      ctx.fillStyle = f.char.palette.body;
+      ctx.fillStyle = '#1e293b';
       ctx.fillRect(portX, y + 10, 32, 32);
-      ctx.fillStyle = f.char.palette.trim;
-      ctx.fillRect(portX, y + 28, 32, 8);
-      ctx.fillStyle = f.char.palette.eye;
-      ctx.fillRect(portX + 18, y + 14, 5, 6);
-      ctx.fillRect(portX + 24, y + 14, 5, 6);
+      
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(portX, y + 10, 32, 32);
+      ctx.clip();
+      this.drawIdle(ctx, f.char, portX + 16, y - 5, 0.8);
+      ctx.restore();
+      
+      ctx.strokeStyle = f.accentColor;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(portX, y + 10, 32, 32);
 
       // names
       ctx.textAlign = isP1 ? 'left' : 'right';
@@ -672,23 +681,38 @@ export class Game {
   // ---- RESULT ----
   renderResult(ctx) {
     if (this.resultTimer < 30) return;
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    
+    // Dark overlay
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
     ctx.fillRect(0, 0, GAME.WIDTH, GAME.HEIGHT);
     ctx.textAlign = 'center';
     const cx = GAME.WIDTH / 2;
 
     if (this.winner) {
-      ctx.fillStyle = this.winner.accentColor;
-      ctx.font = 'bold 22px monospace';
-      ctx.fillText(`${this.winner.label} WINS`, cx, 150);
-      this.drawPortrait(ctx, this.winner.char, cx, 180, 3);
-      ctx.fillStyle = '#2563eb';
-      ctx.font = 'bold 48px monospace';
-      ctx.fillText(this.winner.char.name + '!', cx, 360);
+      if (this.mode === '1P') {
+        if (this.winner.isHuman) {
+          ctx.fillStyle = '#4ade80'; // Green
+          ctx.font = 'bold 64px monospace';
+          ctx.fillText('WINNER!', cx, 200);
+        } else {
+          ctx.fillStyle = '#ef4444'; // Red
+          ctx.font = 'bold 64px monospace';
+          ctx.fillText('GAME OVER', cx, 200);
+        }
+        this.drawIdle(ctx, this.winner.char, cx, 210, 2);
+      } else {
+        ctx.fillStyle = this.winner.accentColor;
+        ctx.font = 'bold 32px monospace';
+        ctx.fillText(`${this.winner.label} WINS`, cx, 160);
+        this.drawIdle(ctx, this.winner.char, cx, 150, 2.5);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 48px monospace';
+        ctx.fillText(this.winner.char.name + '!', cx, 310);
+      }
     } else {
-      ctx.fillStyle = '#ef4444';
-      ctx.font = 'bold 48px monospace';
-      ctx.fillText('DRAW!', cx, 280);
+      ctx.fillStyle = '#f87171';
+      ctx.font = 'bold 64px monospace';
+      ctx.fillText('DRAW!', cx, 240);
     }
 
     const blink = Math.floor(this.t / 30) % 2 === 0;
@@ -696,17 +720,17 @@ export class Game {
     ctx.textAlign = 'center';
     ctx.font = 'bold 22px monospace';
     
-    // REMATCH BUTTON
-    ctx.fillStyle = blink ? '#ef4444' : '#f87171';
-    ctx.fillRect(cx - 220, 420, 200, 50);
+    // RESTART BUTTON
+    ctx.fillStyle = blink ? '#3b82f6' : '#2563eb';
+    ctx.fillRect(cx - 120, 340, 240, 50);
     ctx.fillStyle = '#ffffff';
-    ctx.fillText('REMATCH (ENTER)', cx - 120, 453);
+    ctx.fillText('RESTART', cx, 373);
     
     // MENU BUTTON
-    ctx.fillStyle = '#2563eb';
-    ctx.fillRect(cx + 20, 420, 200, 50);
+    ctx.fillStyle = '#475569';
+    ctx.fillRect(cx - 120, 410, 240, 50);
     ctx.fillStyle = '#ffffff';
-    ctx.fillText('MENU (ESC)', cx + 120, 453);
+    ctx.fillText('MAIN MENU', cx, 443);
   }
 }
 
