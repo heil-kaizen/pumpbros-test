@@ -129,18 +129,6 @@ export const CHARACTERS = [
     blurb: 'Such balance. Very fighter.',
   }),
   mk({
-    id: 'pepe', name: 'PEPE',
-    palette: { body: '#5bbf52', accent: '#3d8a37', eye: '#ffffff', trim: '#b33a3a' },
-    weight: 86, speedMult: 1.22, jumpMult: 1.12, dmgMult: 0.9, special: 'projectile',
-    blurb: 'Feels fast man.',
-  }),
-  mk({
-    id: 'chad', name: 'CHAD',
-    palette: { body: '#e9c39b', accent: '#caa178', eye: '#3a6ea5', trim: '#f4d9b8' },
-    weight: 128, speedMult: 0.86, jumpMult: 0.92, dmgMult: 1.28, special: 'dash',
-    blurb: 'Yes.',
-  }),
-  mk({
     id: 'wojak', name: 'WOJAK',
     palette: { body: '#dfe6ec', accent: '#b8c2cc', eye: '#2b2b2b', trim: '#9aa7b3' },
     weight: 100, speedMult: 1.0, jumpMult: 1.04, dmgMult: 1.0, special: 'projectile',
