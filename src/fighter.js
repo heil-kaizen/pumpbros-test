@@ -523,7 +523,22 @@ export class Fighter {
     const sx = frameRect.x;
     const sy = frameRect.y;
     const sw = frameRect.w;
-    const sh = frameRect.h;
+    let sh = frameRect.h;
+
+    // Fix sprite bounding box bleed by clamping height against overlapping lower rows
+    let maxBottom = sy + sh;
+    for (let r = row + 1; r < framesData.length; r++) {
+      for (const otherF of framesData[r]) {
+        if (sx < otherF.x + otherF.w && sx + sw > otherF.x) { // Horizontal overlap
+          if (sy < otherF.y) {
+            maxBottom = Math.min(maxBottom, otherF.y);
+          }
+        }
+      }
+    }
+    if (sy + sh > maxBottom) {
+      sh = maxBottom - sy;
+    }
 
     // Scale relative to the generated image grid.
     // They are all generated on ~1700x2500 sheets, so relative scale is captured in source frame size.
