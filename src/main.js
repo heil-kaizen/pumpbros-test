@@ -45,9 +45,9 @@ function toggleFullscreen() {
 fsBtn.addEventListener('click', toggleFullscreen);
 document.addEventListener('fullscreenchange', () => {
   if (document.fullscreenElement) {
-    fsBtn.innerHTML = '<span class="font-pixel text-[10px] text-slate-800 font-bold">EXIT FS</span>';
+    fsBtn.innerHTML = '<span class="font-pixel text-[10px] text-white">EXIT FS</span>';
   } else {
-    fsBtn.innerHTML = '<span class="font-pixel text-[10px] text-slate-800 font-bold">FULLSCREEN</span>';
+    fsBtn.innerHTML = '<span class="font-pixel text-[10px] text-white">FULLSCREEN</span>';
   }
   canvas.focus();
 });

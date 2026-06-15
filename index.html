@@ -7,9 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Anybody:wght@700;800&family=Press+Start+2P&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 </head>
-<body class="bg-blue-50/50 min-h-screen flex items-center justify-center p-4 md:p-8 overflow-hidden font-body-md text-slate-800">
-  <main class="w-full max-w-6xl mx-auto flex justify-center">
-    <div class="relative bg-white p-4 rounded-3xl shadow-2xl border-4 border-slate-200 crt-frame">
+<body class="bg-[#111] h-screen w-screen m-0 p-0 flex items-center justify-center overflow-hidden font-body-md text-white">
+  <main class="w-full h-full flex justify-center items-center">
+    <div class="crt-frame">
       <div class="crt-screen relative bg-sky-200">
         <!-- Scanlines & Vignette Layer -->
         <div class="scanlines"></div>
@@ -24,30 +24,30 @@
         <div id="start-screen" class="absolute inset-0 flex flex-col justify-between p-8 z-20 pointer-events-none">
            <!-- Top UI -->
            <div class="flex justify-end items-start gap-4 pointer-events-auto">
-             <button id="helpBtn" class="cartridge-btn px-4 py-2 flex flex-col items-center bg-white border-2 border-slate-300 text-slate-800 shadow-[0_4px_0_#cbd5e1] active:shadow-[0_0px_0_#cbd5e1] active:translate-y-1">
-               <span class="font-pixel text-[10px] text-slate-800 font-bold">CONTROLS</span>
+             <button id="helpBtn" class="cartridge-btn px-4 py-2 flex flex-col items-center">
+               <span class="font-pixel text-[10px] text-white">CONTROLS</span>
              </button>
-             <button id="fsBtn" class="cartridge-btn px-4 py-2 flex flex-col items-center bg-white border-2 border-slate-300 text-slate-800 shadow-[0_4px_0_#cbd5e1] active:shadow-[0_0px_0_#cbd5e1] active:translate-y-1">
-               <span class="font-pixel text-[10px] text-slate-800 font-bold">FULLSCREEN</span>
+             <button id="fsBtn" class="cartridge-btn px-4 py-2 flex flex-col items-center">
+               <span class="font-pixel text-[10px] text-white">FULLSCREEN</span>
              </button>
            </div>
         </div>
 
         <!-- Controls Overlay -->
-        <div id="controls" class="absolute inset-0 z-30 bg-white/90 hidden flex-col items-center justify-center pointer-events-auto backdrop-blur-sm">
-          <div class="bg-white border-4 border-blue-400 p-6 w-3/4 max-w-lg shadow-[0_8px_0_rgba(96,165,250,1)] rounded-xl">
-            <h3 class="font-pixel text-xl text-blue-600 mb-4 text-center">Controls</h3>
-            <table class="w-full text-left font-body-md text-slate-700">
-              <tr class="text-slate-900 border-b-2 border-slate-200"><th class="pb-2">Action</th><th>P1</th><th>P2</th></tr>
-              <tr><td class="py-2 border-b border-slate-100">Move/Jump</td><td class="border-b border-slate-100">Arrows</td><td class="border-b border-slate-100">WASD</td></tr>
-              <tr><td class="py-2 border-b border-slate-100">Drop/Fastfall</td><td class="border-b border-slate-100">↓</td><td class="border-b border-slate-100">S</td></tr>
-              <tr><td class="py-2 border-b border-slate-100">Light Attack</td><td class="border-b border-slate-100">X</td><td class="border-b border-slate-100">J</td></tr>
-              <tr><td class="py-2 border-b border-slate-100">Heavy Attack</td><td class="border-b border-slate-100">C</td><td class="border-b border-slate-100">K</td></tr>
-              <tr><td class="py-2 border-b border-slate-100">Special</td><td class="border-b border-slate-100">Z</td><td class="border-b border-slate-100">L</td></tr>
+        <div id="controls" class="absolute inset-0 z-30 bg-black/80 hidden flex-col items-center justify-center pointer-events-auto">
+          <div class="bg-surface-container-highest border-4 border-primary-container p-6 w-3/4 max-w-lg shadow-[0_0_20px_rgba(57,255,20,0.3)]">
+            <h3 class="font-pixel text-xl text-primary-container mb-4 text-center">Controls</h3>
+            <table class="w-full text-left font-body-md text-white">
+              <tr class="text-secondary-fixed border-b border-white/20"><th class="pb-2">Action</th><th>P1</th><th>P2</th></tr>
+              <tr><td class="py-2">Move/Jump</td><td>Arrows</td><td>WASD</td></tr>
+              <tr><td class="py-2">Drop/Fastfall</td><td>↓</td><td>S</td></tr>
+              <tr><td class="py-2">Light Attack</td><td>X</td><td>J</td></tr>
+              <tr><td class="py-2">Heavy Attack</td><td>C</td><td>K</td></tr>
+              <tr><td class="py-2">Special</td><td>Z</td><td>L</td></tr>
               <tr><td class="py-2">Shield</td><td>V</td><td>I</td></tr>
             </table>
             <div class="mt-6 text-center">
-              <button id="closeHelpBtn" class="cartridge-btn px-6 py-2 border-2 border-blue-400 text-blue-600 font-bold bg-blue-50 hover:bg-blue-400 hover:text-white shadow-[0_4px_0_#60a5fa] active:shadow-[0_0px_0_#60a5fa] active:translate-y-1 transition-colors font-pixel text-sm rounded">CLOSE</button>
+              <button id="closeHelpBtn" class="cartridge-btn px-6 py-2 border-2 border-primary-container text-primary-container hover:bg-primary-container hover:text-black transition-colors font-pixel text-sm">CLOSE</button>
             </div>
           </div>
         </div>
