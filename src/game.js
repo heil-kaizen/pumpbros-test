@@ -105,9 +105,9 @@ export class Game {
       const cx = GAME.WIDTH / 2;
       
       // Mode selection
-      const optsY = [290, 340];
+      const optsY = [310, 370];
       for (let i = 0; i < 2; i++) {
-        if (Math.abs(py - optsY[i]) < 25 && Math.abs(px - cx) < 160) {
+        if (Math.abs(py - optsY[i]) < 30 && Math.abs(px - cx) < 180) {
           if (this.titleIndex !== i) {
              this.titleIndex = i;
              sfx.select();
@@ -485,33 +485,29 @@ export class Game {
     ctx.fillText('PUMPBROS', cx, 170 + bob);
 
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(cx - 260, 210 + bob, 520, 28);
-    ctx.strokeStyle = '#222'; ctx.lineWidth = 3;
-    ctx.strokeRect(cx - 260, 210 + bob, 520, 28);
+    ctx.fillRect(cx - 300, 210 + bob, 600, 36);
+    ctx.strokeStyle = '#222'; ctx.lineWidth = 4;
+    ctx.strokeRect(cx - 300, 210 + bob, 600, 36);
 
     ctx.fillStyle = '#2563eb'; // blue
-    ctx.font = 'bold 16px monospace';
-    ctx.fillText('★ ONCHAIN BRAWLER · POWERED BY PUMP ★', cx, 230 + bob);
+    ctx.font = 'bold 20px monospace';
+    ctx.fillText('★ ONCHAIN BRAWLER · POWERED BY PUMP ★', cx, 235 + bob);
 
     const opts = ['1 PLAYER (vs CPU)', '2 PLAYERS'];
     for (let i = 0; i < opts.length; i++) {
       const sel = i === this.titleIndex;
-      ctx.font = `bold ${sel ? 26 : 22}px monospace`;
-      const prefix = sel ? '▶ ' : '   ';
+      ctx.font = `bold ${sel ? 32 : 26}px monospace`;
+      const prefix = sel ? '▶ ' : '';
       
-      const textY = 320 + i * 50;
-      // text shadow
-      ctx.fillStyle = 'rgba(255,255,255,0.8)';
-      ctx.fillText(prefix + opts[i], cx + 2, textY + 2);
+      const textY = 320 + i * 60;
+      
+      // thick black outline
+      ctx.strokeStyle = '#000000'; 
+      ctx.lineWidth = 6; 
+      ctx.strokeText(prefix + opts[i], cx, textY); 
 
-      if (sel) { 
-        // blink cursor logic
-        const blink = Math.floor(this.t / 25) % 2 === 0;
-        if (blink) {
-          ctx.strokeStyle = '#222'; ctx.lineWidth = 4; ctx.strokeText(prefix + opts[i], cx, textY); 
-        }
-      }
-      ctx.fillStyle = sel ? '#ef4444' : '#64748b';
+      // text fill
+      ctx.fillStyle = sel ? '#ef4444' : '#ffffff';
       ctx.fillText(prefix + opts[i], cx, textY);
     }
   }
