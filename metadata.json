@@ -1,6 +1,6 @@
 {
-  "name": "Remix: Smash Fun",
-  "description": "A fun workspace project named Smash Fun.",
+  "name": "PUMPBROS",
+  "description": "A fun workspace project named PUMPBROS.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

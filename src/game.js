@@ -475,12 +475,12 @@ export class Game {
     
     // Pixel-text shadow effect manually drawn
     ctx.fillStyle = '#cbd5e1';  // shadow
-    ctx.fillText('MEME SMASH', cx + 6, 170 + bob + 6);
+    ctx.fillText('PUMPBROS', cx + 6, 170 + bob + 6);
 
     ctx.strokeStyle = '#222'; ctx.lineWidth = 6;
-    ctx.strokeText('MEME SMASH', cx, 170 + bob);
+    ctx.strokeText('PUMPBROS', cx, 170 + bob);
     ctx.fillStyle = '#fbbf24'; // yellow
-    ctx.fillText('MEME SMASH', cx, 170 + bob);
+    ctx.fillText('PUMPBROS', cx, 170 + bob);
 
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(cx - 260, 210 + bob, 520, 28);
