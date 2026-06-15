@@ -2,6 +2,7 @@
 //  Game — state machine (TITLE → SELECT → BATTLE → RESULT), HUD, menus, loop.
 // ============================================================================
 import { GAME, STAGE, RULES, CHARACTERS, CONTROLS, getCharacter } from './config.js';
+import { SPRITE_FRAMES } from './frames.js';
 import { input } from './input.js';
 import { sfx } from './audio.js';
 import { Particles } from './particles.js';
@@ -534,14 +535,18 @@ export class Game {
       ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 2;
       ctx.strokeRect(x + 0.5, y + 0.5, cw - 1, ch - 1);
 
-      // big portrait
-      this.drawPortrait(ctx, c, x + cw / 2, y + 18, 2.2);
+      // smaller sprite, fitted at the top/center
+      this.drawIdle(ctx, c, x + cw / 2, y + 10, 1.6);
 
-      ctx.fillStyle = '#1e3a8a';
-      ctx.font = 'bold 18px monospace';
-      ctx.fillText(c.name, x + cw / 2, y + ch - 26);
-      ctx.fillStyle = '#64748b';
-      ctx.font = '10px monospace';
+      // High-contrast background strip for the text to improve readability
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+      ctx.fillRect(x, y + ch - 42, cw, 42);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 20px monospace';
+      ctx.fillText(c.name.toUpperCase(), x + cw / 2, y + ch - 24);
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'bold 10px monospace';
       ctx.fillText(c.blurb.slice(0, 22), x + cw / 2, y + ch - 10);
     }
 
@@ -569,6 +574,47 @@ export class Game {
       ? 'P1: Arrows move, X confirm, Z back  ·  P2: WASD move, J confirm, L back'
       : 'Arrows move  ·  X confirm  ·  Z back  ·  ESC menu';
     ctx.fillText(hint, cx, GAME.HEIGHT - 24);
+  }
+
+  drawIdle(ctx, c, cx, top, scale) {
+    if (c.img && c.img.width > 0) {
+      const framesData = SPRITE_FRAMES[c.id] || SPRITE_FRAMES['punch'];
+      if (!framesData || !framesData[0] || framesData[0].length === 0) {
+        this.drawPortrait(ctx, c, cx, top, scale);
+        return;
+      }
+      const rowData = framesData[0];
+      const animFrame = 0;
+      const frameRect = rowData[animFrame];
+      
+      const sx = frameRect.x, sy = frameRect.y, sw = frameRect.w;
+      let sh = frameRect.h;
+      
+      let maxBottom = sy + sh;
+      for (let r = 1; r < framesData.length; r++) {
+        for (const otherF of framesData[r]) {
+          if (sx < otherF.x + otherF.w && sx + sw > otherF.x) {
+            if (sy < otherF.y) maxBottom = Math.min(maxBottom, otherF.y);
+          }
+        }
+      }
+      if (sy + sh > maxBottom) sh = maxBottom - sy;
+
+      const finalScale = 0.30 * (scale / 1.7) * 0.9;
+      const destW = sw * finalScale;
+      const destH = sh * finalScale;
+      
+      const ox = (frameRect.ox !== undefined ? frameRect.ox : sw/2) * finalScale;
+      const oy = (frameRect.oy !== undefined ? frameRect.oy : sh) * finalScale;
+      
+      ctx.save();
+      const feetY = top + 48 * scale; // adjust feet placement to sit directly above the text box
+      ctx.translate(cx, feetY);
+      ctx.drawImage(c.img, sx, sy, sw, sh, -ox, -oy, destW, destH);
+      ctx.restore();
+    } else {
+      this.drawPortrait(ctx, c, cx, top, scale);
+    }
   }
 
   drawPortrait(ctx, c, cx, top, scale) {

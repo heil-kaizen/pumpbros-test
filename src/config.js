@@ -103,7 +103,7 @@ export const ATTACKS = {
 //  set `sprite: 'assets/sprites/<id>.png'` — the renderer will prefer it.
 // ============================================================================
 function mk(o) {
-  return Object.assign({
+  const c = Object.assign({
     weight: 100,     // higher = takes less knockback, falls a bit harder
     speedMult: 1,    // run/air speed multiplier
     jumpMult: 1,     // jump strength multiplier
@@ -111,6 +111,12 @@ function mk(o) {
     special: 'projectile', // 'projectile' | 'dash'
     sprite: null,
   }, o);
+  if (c.sprite) {
+    c.img = new Image();
+    c.img.crossOrigin = 'anonymous';
+    c.img.src = c.sprite;
+  }
+  return c;
 }
 
 // SPRITE_FRAMES are now in frames.js
