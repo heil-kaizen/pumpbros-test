@@ -8,9 +8,11 @@ export class Stage {
     this.t = 0;
 
     this.video = document.createElement('video');
-    this.video.src = 'https://raw.githubusercontent.com/heil-kaizen/assets-for-smashfun/main/assets/chara%20assets%20sprite%20sheets/grok-video-ef5fe0a6-50e6-4770-8854-d5a3a83ce103%20(1).webm';
+    this.video.src = 'https://cdn.jsdelivr.net/gh/heil-kaizen/assets-for-smashfun@main/assets/chara%20assets%20sprite%20sheets/grok-video-ef5fe0a6-50e6-4770-8854-d5a3a83ce103%20(1).webm';
     this.video.loop = true;
     this.video.muted = true;
+    this.video.playsInline = true;
+    this.video.preload = 'auto';
     this.video.crossOrigin = 'anonymous';
     this.video.play().catch(e => console.warn('Video autoplay failed:', e));
   }
